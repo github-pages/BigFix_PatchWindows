@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<BES xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="BES.xsd">
+	<Task>
+		<Title>Set Patch Window Values</Title>
+		<Description><![CDATA[<P><FONT size=4>This task sets the Patch Window on&nbsp;targetted computers to a user-defined value</FONT></P>
+<P><FONT size=4>Values&nbsp;user must enter are:</FONT></P>
+<UL style="MARGIN-RIGHT: 0px" dir=ltr>
+<LI><FONT size=4><STRONG>Patch Week<BR></STRONG>A Number indicating which week of the month the Patch Window is in.<BR></FONT><STRONG><FONT color=#ff0000 size=2>The patch week starts on the first Sunday of the month.<BR>EX: If the first day of the month&nbsp;falls on Monday-Saturday&nbsp;that is considered 'Patch Week 0'.&nbsp; The next week&nbsp;starting&nbsp;Sunday will be 'Patch Week 1' and so on.<BR></FONT></STRONG>
+<LI><FONT size=4><STRONG>Patch Day<BR></STRONG>The Day of the week on which a computer is allowed to install patches (i.e. Sunday, Monday, Tuesday, Wednesday, Thursday, Friday, Saturday)</FONT> <BR>
+<LI><FONT size=4><STRONG>Patch Start Time<BR></STRONG>The&nbsp;time of day in 24-hr format&nbsp;on which a computer is allowed to start installing patches (i.e.1200 [noon], 1600 [4pm], 0400 [4am], etc.)</FONT> <BR>
+<LI><FONT size=4><STRONG>Patch&nbsp;End Time<BR></STRONG>The&nbsp;time of day in 24-hr format&nbsp;on which a computer must stop installing patches (i.e.1200 [noon], 1600 [4pm], 0400 [4am], etc.)<BR></FONT></LI></UL>
+<P dir=ltr><FONT size=4>This task will also record the following values which can be used to audit when and by who the action was last set.</FONT></P>
+<UL dir=ltr>
+<LI>
+<DIV><FONT size=4><STRONG>Patch Window Action ID</STRONG><BR>The Action ID of the BigFix action that resulted from a user running this task.&nbsp; This is visible in the 'Actions' item of the BigFix Console navigation tree.&nbsp; To view this property right-click on the column header and select the 'ID' property.<BR></DIV></FONT>
+<LI>
+<DIV><FONT size=4><STRONG>Patch Window Last Set</STRONG><BR>The date and time&nbsp;when this task was last run.<BR></DIV></FONT>
+<LI>
+<DIV><FONT size=4><STRONG>Patch Window Set By</STRONG><BR>The name of the operator who last ran this task.</FONT></DIV></LI></UL>]]></Description>
+		<Relevance>true</Relevance>
+		<Category></Category>
+		<Source>Internal</Source>
+		<SourceID></SourceID>
+		<SourceReleaseDate>2017-08-17</SourceReleaseDate>
+		<SourceSeverity></SourceSeverity>
+		<CVENames></CVENames>
+		<SANSID></SANSID>
+		<MIMEField>
+			<Name>x-fixlet-modification-time</Name>
+			<Value>Thu, 17 Jan 2019 23:00:17 +0000</Value>
+		</MIMEField>
+		<Domain>BESC</Domain>
+		<DefaultAction ID="Action4">
+			<Description>
+				<PreLink>Click </PreLink>
+				<Link>here</Link>
+				<PostLink> to set the computer's Patch Window.</PostLink>
+			</Description>
+			<ActionScript MIMEType="application/x-Fixlet-Windows-Shell">// Ask User to Enter Patch Window Parameters
+action parameter query "PatchWeek" with description "Enter Week Number on which the Computer(s) is allowed to patch [0-4]"
+action parameter query "PatchDay" with description "Enter the Day of the Week Computer(s) is allowed to patch"
+action parameter query "PatchWindowStart" with description "Enter the Start Time of the Patch window (24hr format)" and with default value "0000"
+action parameter query "PatchWindowEnd" with description "Enter the End Time of the Patch Window (24hr format)" and with default value "2359"
+
+
+// Set Patch Window Parameters
+setting "Patch Week"="{parameter "PatchWeek"}" on "{now}" for client
+setting "Patch Day"="{parameter "PatchDay"}" on "{now}" for client
+setting "Patch Start Time"="{parameter "PatchWindowStart"}" on "{now}" for client
+setting "Patch End Time"="{parameter "PatchWindowEnd"}" on "{now}" for client
+
+// Set Patch Window Audit Values
+setting "Patch Window Last Set"="{now}" on "{now}" for client
+setting "Patch Window Last Set"="{now}" on "{now}" for client
+setting "Patch Window Action ID"="{id of active action}" on "{now}" for client
+setting "Patch Window Set By"="{values of headers "action-issuer-name" of action}" on "{now}" for client
+
+</ActionScript>
+		</DefaultAction>
+	</Task>
+</BES>
